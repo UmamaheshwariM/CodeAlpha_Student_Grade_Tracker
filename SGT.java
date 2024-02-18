@@ -1,136 +1,70 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-class Subject {
-    private String name;
-    private List<Integer> grades;
+public class Main {
 
-    public Subject(String name) {
-        this.name = name;
-        this.grades = new ArrayList<>();
-    }
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<String> studentNames = new ArrayList<>();
+        List<List<Integer>> studentScores = new ArrayList<>();
 
-    public String getName() {
-        return name;
-    }
+        System.out.println("Enter the number of students:");
+        int numStudents = scanner.nextInt();
+        scanner.nextLine(); // consume newline not consumed by nextInt()
 
-    public void addGrade(int grade) {
-        grades.add(grade);
-    }
+        for (int i = 0; i < numStudents; i++) {
+            System.out.println("Enter the name of student " + (i + 1) + ":");
+            String studentName = scanner.nextLine();
+            studentNames.add(studentName);
 
-    public double getAverage() {
-        int sum = 0;
-        for (int grade : grades) {
-            sum += grade;
+            System.out.println("Enter the number of subjects for student " + (i + 1) + ":");
+            int numSubjects = scanner.nextInt();
+            scanner.nextLine(); // consume newline not consumed by nextInt()
+
+            List<Integer> scores = new ArrayList<>();
+            for (int j = 0; j < numSubjects; j++) {
+                System.out.println("Enter the grade of student " + (i + 1) + " for subject " + (j + 1) + ":");
+                int score = scanner.nextInt();
+                scores.add(score);
+            }
+            studentScores.add(scores);
         }
-        return (double) sum / grades.size();
+
+        for (int i = 0; i < studentNames.size(); i++) {
+            System.out.println("\nStudent: " + studentNames.get(i));
+            List<Integer> scores = studentScores.get(i);
+            System.out.println("Average: " + calculateAverage(scores));
+            System.out.println("Highest: " + calculateHighest(scores));
+            System.out.println("Lowest: " + calculateLowest(scores));
+        }
     }
 
-    public int getHighest() {
-        int highest = Integer.MIN_VALUE;
-        for (int grade : grades) {
-            if (grade > highest) {
-                highest = grade;
+    private static double calculateAverage(List<Integer> scores) {
+        double sum = 0;
+        for (int score : scores) {
+            sum += score;
+        }
+        return sum / scores.size();
+    }
+
+    private static int calculateHighest(List<Integer> scores) {
+        int highest = scores.get(0);
+        for (int score : scores) {
+            if (score > highest) {
+                highest = score;
             }
         }
         return highest;
     }
 
-    public int getLowest() {
-        int lowest = Integer.MAX_VALUE;
-        for (int grade : grades) {
-            if (grade < lowest) {
-                lowest = grade;
+    private static int calculateLowest(List<Integer> scores) {
+        int lowest = scores.get(0);
+        for (int score : scores) {
+            if (score < lowest) {
+                lowest = score;
             }
         }
         return lowest;
     }
 }
-
-class Student {
-    private String name;
-    private List<Subject> subjects;
-
-    public Student(String name) {
-        this.name = name;
-        this.subjects = new ArrayList<>();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void addSubject(Subject subject) {
-        subjects.add(subject);
-    }
-
-    public double getAverage(String subjectName) {
-        for (Subject subject : subjects) {
-            if (subject.getName().equals(subjectName)) {
-                return subject.getAverage();
-            }
-        }
-        return 0.0;
-    }
-
-    public int getHighest(String subjectName) {
-        for (Subject subject : subjects) {
-            if (subject.getName().equals(subjectName)) {
-                return subject.getHighest();
-            }
-        }
-        return 0;
-    }
-
-    public int getLowest(String subjectName) {
-        for (Subject subject : subjects) {
-            if (subject.getName().equals(subjectName)) {
-                return subject.getLowest();
-            }
-        }
-        return 0;
-    }
-}
-
-class GradeTracker {
-    private List<Student> students;
-
-    public GradeTracker() {
-        this.students = new ArrayList<>();
-    }
-
-    public void addStudent(Student student) {
-        students.add(student);
-    }
-
-    public Student findStudentByName(String name) {
-        for (Student student : students) {
-            if (student.getName().equals(name)) {
-                return student;
-            }
-        }
-        return null;
-    }
-}
-public static void main(String[] args) {
-    GradeTracker gradeTracker = new GradeTracker();
-
-    // Add students
-    Student student1 = new Student("John Doe");
-    Student student2 = new Student("Jane Doe");
-
-    gradeTracker.addStudent(student1);
-    gradeTracker.addStudent(student2);
-
-    // Add subjects
-    Subject math = new Subject("Math");
-    Subject english = new Subject("English");
-
-    student1.addSubject(math);
-    student1.addSubject(english);
-
-    student2.addSubject(math);
-    student2.addSubject(english);
-
-    // Add grades
-    math.addGrade(85);
-    math.addGrade(90);
